@@ -1,4 +1,4 @@
-CA Signing Environment
+CA signing environment
 =====================
 
 1. Option 1 - Follow [Create Security Certificates using OpenSSL](https://www.cockroachlabs.com/docs/stable/create-security-certificates-openssl) to create a CA signing environment. So that you can issue certificates to your KEYs, you need to create one **node key** for the TLS server.
@@ -36,7 +36,7 @@ A certificate **your_deivce_ID.pem** is created in the folder ca_signing/certs. 
 foo@bar:ca_signing$ cp certs/lewis.pem ../sample_app/app/src/main/assets/
 ```
 
-Test the connect
+Test the connection
 ======================
 1. Run the NodeJS test server.
 ```console

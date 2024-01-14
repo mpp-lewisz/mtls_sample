@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title></title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="ca-signing-environment">CA signing environment</h1>
+<ol>
+<li>
+<p>Option 1 - Follow <a href="https://www.cockroachlabs.com/docs/stable/create-security-certificates-openssl">Create Security Certificates using OpenSSL</a> to create a CA signing environment. So that you can issue certificates to your KEYs, you need to create one <strong>node key</strong> for the TLS server.</p>
+</li>
+<li>
+<p>Option 2 - You can use the ca_signing folder as is.</p>
+</li>
+</ol>
+<p><strong>Please delete and re-create the ca_signing folder if you choose option 1.</strong></p>
+<h1 id="generate-the-app-client-key">Generate the app client key.</h1>
+<ol>
+<li>
+<p>Open the app folder in Android Studio.</p>
+</li>
+<li>
+<p>Change the server IP address in MainActivity.kt - Set MainActivity.URL to 'https://<strong>your local IP address</strong>:3000'.</p>
+</li>
+<li>
+<p>Change MainActivity.DEVICE_ID to a name you prefer, which is the device ID.</p>
+</li>
+<li>
+<p>Run the app on an actual device or an emulator. If the app runs on an actual device, the device has to be on the same WiFi network with the TLS server running on your laptop.</p>
+</li>
+<li>
+<p>Click the 'Generate Identity Key' button to generate a new key in Hardware KeyStore.</p>
+</li>
+<li>
+<p>A certificate request will be printed out on the Logcat console.</p>
+</li>
+<li>
+<p>Save the certificate request to the file <strong>ca_signing/your_deivce_id</strong>.csr</p>
+</li>
+</ol>
+<h1 id="issue-the-certificate">Issue the certificate</h1>
+<pre><code class="language-console">foo@bar:sample_folder$ cd ca_signing
+foo@bar:sample_folder$ ./create_certificate.sh your_device_ID
+</code></pre>
+<p>A certificate <strong>your_deivce_ID.pem</strong> is created in the folder ca_signing/certs. Copy the file to the Android Project assets folder - sample_app/app/src/main/assets.</p>
+<pre><code class="language-console">foo@bar:ca_signing$ cp certs/lewis.pem ../sample_app/app/src/main/assets/
+</code></pre>
+<h1 id="test-the-connection">Test the connection</h1>
+<ol>
+<li>Run the NodeJS test server.</li>
+</ol>
+<pre><code class="language-console">foo@bar:sample_folder$ cd server
+foo@bar:sample_folder$ node server.js
+</code></pre>
+<ol start="2">
+<li>
+<p>Re-launch the app, as a new certificate has been added. Then press the 'Connect' button.</p>
+</li>
+<li>
+<p>If the mTLS link works, Hello World should pop up.</p>
+</li>
+</ol>
+
+            <script async src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+            
+        </body>
+        </html>
